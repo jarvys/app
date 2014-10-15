@@ -137,6 +137,10 @@ App._Utils = function (window, document, App) {
 		}
 	}
 
+	function isFunction (fn) {
+		return Object.prototype.toString.call(fn) === '[object Function]';
+	}
+
 	function isNode (elem) {
 		if ( !elem ) {
 			return false;
@@ -352,6 +356,7 @@ App._Utils = function (window, document, App) {
 		forEach       : forEach       ,
 		isArray       : isArray       ,
 		isNode        : isNode        ,
+		isFunction    : isFunction    ,
 		isjQueryElem  : isjQueryElem  ,
 		setTransform  : setTransform  ,
 		setTransition : setTransition ,
@@ -1764,7 +1769,7 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 		return fetchPage(index);
 	};
 
-	App.removeFromStack = function (startIndex, endIndex) {
+	App.removeFromStack = function (startIndex, endIndex, callback) {
 		// minus 1 because last item on stack is current page (which is untouchable)
 		var stackSize = stack.length - 1;
 		switch (typeof startIndex) {
@@ -1797,11 +1802,12 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 			default:
 				throw TypeError('end index must be a number if defined, got ' + endIndex);
 		}
+
 		if (startIndex > endIndex) {
 			throw TypeError('start index cannot be greater than end index');
 		}
 
-		removeFromStack(startIndex, endIndex);
+		removeFromStack(startIndex, endIndex, callback);
 	};
 
 	App.addToStack = function (index, newPages) {
@@ -1955,11 +1961,19 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 		});
 	}
 
-	function removeFromStack (startIndex, endIndex) {
-		App._Navigation.enqueue(function (finish) {
+	function removeFromStack (startIndex, endIndex, callback) {
+		App._Navigation.enqueue(function (unlock) {
 			removeFromStackNow(startIndex, endIndex);
 			finish();
 		});
+
+		function finish() {
+			unlock();
+
+			if (Utils.isFunction(callback)) {
+				callback();
+			}
+		}
 	}
 
 	// you must manually save the stack if you choose to use this method

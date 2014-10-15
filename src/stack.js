@@ -28,7 +28,7 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 		return fetchPage(index);
 	};
 
-	App.removeFromStack = function (startIndex, endIndex) {
+	App.removeFromStack = function (startIndex, endIndex, callback) {
 		// minus 1 because last item on stack is current page (which is untouchable)
 		var stackSize = stack.length - 1;
 		switch (typeof startIndex) {
@@ -61,11 +61,12 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 			default:
 				throw TypeError('end index must be a number if defined, got ' + endIndex);
 		}
+
 		if (startIndex > endIndex) {
 			throw TypeError('start index cannot be greater than end index');
 		}
 
-		removeFromStack(startIndex, endIndex);
+		removeFromStack(startIndex, endIndex, callback);
 	};
 
 	App.addToStack = function (index, newPages) {
@@ -227,7 +228,10 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 
 		function finish() {
 			unlock();
-			callback();
+
+			if (Utils.isFunction(callback)) {
+				callback();
+			}
 		}
 	}
 

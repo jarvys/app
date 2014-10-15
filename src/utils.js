@@ -90,6 +90,10 @@ App._Utils = function (window, document, App) {
 		}
 	}
 
+	function isFunction (fn) {
+		return Object.prototype.toString.call(fn) === '[object Function]';
+	}
+
 	function isNode (elem) {
 		if ( !elem ) {
 			return false;
@@ -305,6 +309,7 @@ App._Utils = function (window, document, App) {
 		forEach       : forEach       ,
 		isArray       : isArray       ,
 		isNode        : isNode        ,
+		isFunction    : isFunction    ,
 		isjQueryElem  : isjQueryElem  ,
 		setTransform  : setTransform  ,
 		setTransition : setTransition ,
