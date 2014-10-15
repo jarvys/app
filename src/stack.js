@@ -223,16 +223,12 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 	function removeFromStack (startIndex, endIndex, callback) {
 		App._Navigation.enqueue(function (unlock) {
 			removeFromStackNow(startIndex, endIndex);
-			finish();
-		});
-
-		function finish() {
 			unlock();
 
 			if (Utils.isFunction(callback)) {
 				callback();
 			}
-		}
+		});
 	}
 
 	// you must manually save the stack if you choose to use this method
