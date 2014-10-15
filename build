@@ -4,7 +4,7 @@ PROJECT="app"
 LICENSE="LICENSE.txt"
 MAJOR_VERSION="2"
 MINOR_VERSION="0"
-BUG_VERSION="2"
+BUG_VERSION="13"
 ZIP_FILE="appjs-v${MAJOR_VERSION}.zip"
 ZIP_DIR="appjs"
 AWS_BUCKET="cdn.kik.com"
@@ -178,6 +178,7 @@ elif [ "$1" = "zip" ] ; then
 	exit 0
 	exit 1
 elif [ "$1" = "dist" ] ; then
+	rm -rf "dist" &&
 	createBuildDir &&
 	build &&
 	mv "${BUILD_DIR}" "dist"

@@ -53,6 +53,9 @@ title: Docs
 				</ul>
 				<p>Since App.js apps are fundamentally static all you have to do is put your code in an HTML file and open it in a browser to test.</p>
 				<p>It is advised that you run your app <a href="https://developers.google.com/chrome-developer-tools/docs/mobile-emulation#emulate-device-viewports" target="_blank">in Chrome while simulating a mobile platform</a> that you're targeting. Don't forget to <a href="https://developers.google.com/chrome-developer-tools/docs/mobile-emulation#emulate-touch-events" target="_blank">turn on touch event emulation</a>.</p>
+
+				<h3>Image Search example app</h3>
+				<p>You can alternatively <a href="https://github.com/kikinteractive/image-search-example" target="_blank">fork our Image Search example</a> and start with an already existing product.</p>
 			</section>
 
 			<section>
@@ -128,6 +131,38 @@ App.load('contact', contact);
 </pre>
 				<p>In the second last line of code above, the "contact" object could have any first / last name and the controller would setup the page accordingly.</p>
 				<p>These kinds of arguments coupled with Zepto or jQuery combine to effectively let you template your HTML.</p>
+
+                <h4>Templating</h4>
+                <p>Templating HTML elements is a very common paradigm, and while App.js doesn't have any dedicated features regarding templating it definitely does not get in the way. You can generally use any framework/library that you want and if you want to do it without any of those there are patterns that make it easy:</p>
+                <pre class="prettyprint lang-html">
+&lt;!-- in your html --&gt;
+&lt;div class="app-page" data-page="contact"&gt;
+  &lt;div class="app-topbar"&gt;
+    &lt;div class="app-title"&gt;Contact&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="app-content"&gt;
+    &lt;div class="contacts"&gt;
+        &lt;div class="contact"&gt;
+            &lt;div class="first-name"&gt;&lt;/div&gt;
+            &lt;div class="last-name"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+                <pre class="prettyprint lang-js">
+/* in your javascript */
+App.controller('contact', function (page, contacts) {
+  var $template = $(page).find('.contact').remove();
+  var $contacts = $(page).find('.contacts');
+  contacts.forEach(function (contact) {
+    var $contact = $template.clone(true);
+    $contact.find('.first-name').text(contact.firstName);
+    $contact.find('.last-name' ).text(contact.lastName );
+    $contacts.append($contact);
+  });
+});
+</pre>
 
 				<h4>Events</h4>
 				<p>There are various events that App.js will fire on your page.</p>
